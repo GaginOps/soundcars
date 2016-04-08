@@ -1,6 +1,6 @@
 <?php
 namespace App\Controller;
-
+use Cake\ORM\TableRegistry;
 use App\Controller\AppController;
 
 /**
@@ -16,6 +16,13 @@ class ProductosController extends AppController
      *
      * @return \Cake\Network\Response|null
      */
+    public function initialize()
+    {
+        parent::initialize();
+
+        $this->loadComponent('RequestHandler');
+    } 
+
     public function index()
     {
         $productos = $this->paginate($this->Productos);
@@ -50,7 +57,7 @@ class ProductosController extends AppController
     {
         $producto = $this->Productos->newEntity();
         if ($this->request->is('post')) {
-            $codigo=$this->request->data['codigo'];
+           $codigo=$this->request->data['codigo'];
             $modelo=$this->request->data['modelo'];
             $co=strval($codigo);
             $st=" del producto ";
@@ -69,6 +76,29 @@ class ProductosController extends AppController
         $this->set(compact('producto','marcas','empresas'));
         $this->set('_serialize', ['producto']);
     }
+
+    public function entrada(){
+        $producto = $this->Productos->find('list', ['limit' => 200,'keyField' => 'id',
+        'valueField' =>'full'])->toArray();
+        $this->set(compact('producto'));
+        $this->set('_serialize', ['producto']);
+         if ($this->request->is('ajax')) {
+               $productos = $this->Productos->newEntity();
+               $pro=json_decode($this->request->data['id']);
+               $n=json_decode($this->request->data['nueva']);
+               $exist= $productos->find()
+                ->select(['existencia'])
+                ->where(['id' => $producto_id])
+                ->toArray();
+                $existencia= $exist[0]->existencia-intVal($n);
+                $nueva_cantidad = $productos->query();
+                $nueva_cantidad->update()
+                ->set(['existencia' => $existencia])
+                ->where(['id' => $producto_id])
+                ->execute();
+            }
+    }
+
 
     /**
      * Edit method
@@ -114,23 +144,5 @@ class ProductosController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
-    public function searchjson(){
-        $term= null;
-        if(!empty($this->requeste->query['term']))
-        {
-            $term=$this->request->query['term'];
-            $terms=explode('',trim($term));
-            $terms=array_diff($terms, array(''));
-            foreach ($terms as $term) {
-                $conditions[]=array('Producto.modelo LIKE'=> '%'.$term.'%');
-            }
-            $productos=$this->Producto->find('all')
-                        ->select(['modelo'])
-                        ->limit(10)
-                        ->where([$conditions]);
-            echo json_encode($productos);
-            $this->autoRender=false;
-        }    
-
-    }
+    
 }

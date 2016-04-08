@@ -30,6 +30,10 @@
                         echo $this->Form->input('precio_u',['label'=>'Precio unidad','readonly']);
                         echo $this->Form->input('cantidad');
                         echo $this->Form->input('subtotal',['readonly']);
+                        echo $this->Form->input('descuento',['label'=>'¿desea realizar un descuento?','options'=>[
+                          'no'=>'no','si'=>'si']]);
+                        echo $this->Form->input('valor',['readonly']);
+                        echo $this->Form->input('rest',['readonly']);
                     ?>
                 </fieldset>
                 <?= $this->Form->button(__('Submit')) ?>
@@ -112,7 +116,13 @@
             echo $this->Form->input('sexo',['options'=>['M','F']]);
             echo $this->Form->input('direccion');
             echo $this->Form->input('email');
+            echo $this->Form->input('numero',['label'=>'numero de telefono']);
+            echo $this->Form->input('otronumero',['label'=>'numero de telefono opcional']);
             echo $this->Form->input('carro',['label'=>'automovil','placeholder'=>'ingrese el auto del cliente']);
+            echo $this->Form->input('marca',['label'=>'marca','placeholder'=>'ingrese el auto del cliente']);
+            echo $this->Form->input('year',['label'=>'Año','placeholder'=>'ingrese el auto del cliente']);
+            echo $this->Form->input('modelo',['label'=>'modelo','placeholder'=>'ingrese el auto del cliente']);
+            echo $this->Form->input('tipo',['label'=>'tipo de auto','options'=>['auto'=>'carro','camioneta'=>'camioneta']]);
         ?>
     </fieldset>
     <td><?= $this->Form->button('Crear cliente',['id'=>'ncliente','type'=>'button']) ?></td>
@@ -183,13 +193,35 @@
         </tr>
         <tr>
         <?php foreach ($total as $t): ?>
-        <td>
+        
+          <td>
             <?= $this->Number->format($t->total) ?>
-        </td>
-         <?php endforeach; ?>
+          </td>
         </tr>
+        <tr>
+          <th>
+          Descuento de Bs:
+          </th>
+        </tr>
+        <tr>
+           <td>
+          <?= $this->Number->format($t->resta) ?>
+          </td>
+        </tr>
+        <tr>
+          <th>
+          Total real Bs:
+          </th>
+        </tr>
+        <tr>
+           <td>
+          <?= $this->Number->format($t->total-$t->resta) ?>
+          </td>
+        </tr>
+         <?php endforeach; ?>
+        <
     </table>
-    <?php echo $this->Form->input('total', ['type' => 'hidden','value'=>$t->total]); ?>
+    <?php echo $this->Form->input('total', ['type' => 'hidden','value'=>$t->total-$t->resta]); ?>
     <table>
       <tr>
         <td><?= $this->Form->button('Vender',['id'=>'venta','type'=>'button']) ?></td>
@@ -279,6 +311,13 @@
           $("#subtotal").val(valor);
          }
 
+          $('#valor').blur(resta)
+         function resta(){
+          var s= $("#subtotal").val();
+          var v= $("#valor").val();
+          var t=s-v;
+          $("#rest").val(t);
+         }
 
 
         
@@ -290,8 +329,16 @@
             var s=$('#sexo').val(); 
             var d=$('#direccion').val();
             var em=$('#email').val();
+            var nu=$('#numero').val();
+            var on=$('#otronumero').val();
+            var ca=$('#carro').val();
+            var ma=$('#marca').val();
+            var ye=$('#year').val();
+            var mo=$('#modelo').val();
+            var ti=$('#tipo').val();
             $.ajax({
-                data: {"nombre" : n,"cedula": c, "edad":e,"sexo":s,"direccion":d,"email":em},
+                data: {"nombre" : n,"cedula": c, "edad":e,"sexo":s,"direccion":d,"email":em,"numero":nu,"otronumero":on,"carro":ca
+                ,"marca":ma,"year":ye,"modelo":mo,"tipo":ti},
                 url:   'clientes/add2',
                 type:  'post',
                 dataType:'json', beforeSend: function (xhr) {
@@ -301,7 +348,7 @@
                 },
                 success:  function (response){
                     console.log(response);
-                    location.reload();
+                   
                                  }
                  });
          });
@@ -318,7 +365,14 @@
             $('#banco').prop("disabled", true);
         }
         });
-         
+        
+        $("#descuento").change(function(){
+        if($('#descuento').val()=='si'){
+            $('#valor').prop("readonly", false);
+        }else{
+            $('#valor').prop("readonly", true);
+        }
+        }); 
       });
 </script>
 

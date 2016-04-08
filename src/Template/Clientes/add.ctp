@@ -2,8 +2,8 @@
 <div class="container">
 <div class="col-lg-6 col-lg-offset-3 text-center">
     <div class="form-area">  
-        <form role="form">
-        <br style="clear:both">
+       
+       
     <?= $this->Form->create($cliente) ?>
     <fieldset>
     <h3><?= __('Agregar Nuevo Cliente') ?></h3>
@@ -21,14 +21,20 @@
                 ]);
             echo $this->Form->input('sexo',['options'=>['M','F']]);
             echo $this->Form->input('direccion');
-            echo $this->Form->input('email');
+            echo $this->Form->input('email',['label'=>'correo electronico']);
+            echo $this->Form->input('numero',['label'=>'numero de telefono']);
+            echo $this->Form->input('otronumero',['label'=>'numero de telefono opcional']);
             echo $this->Form->input('carro',['label'=>'automovil','placeholder'=>'ingrese el auto del cliente']);
+            echo $this->Form->input('marca',['label'=>'marca','placeholder'=>'ingrese el auto del cliente']);
+            echo $this->Form->input('year',['label'=>'Año','placeholder'=>'ingrese el auto del cliente']);
+            echo $this->Form->input('modelo',['label'=>'modelo','placeholder'=>'ingrese el auto del cliente']);
+            echo $this->Form->input('tipo',['label'=>'tipo de auto','options'=>['auto'=>'carro','camioneta'=>'camioneta']]);
         ?>
     </fieldset>
     <?= $this->Form->button(__('Submit')) ?>
     <?= $this->Form->end() ?>
 
-</form>
+
     </div>
 </div>
 </div>

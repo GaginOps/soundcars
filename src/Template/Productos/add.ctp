@@ -3,7 +3,7 @@
 <div class="container">
 <div class="col-lg-6 col-lg-offset-3 text-center">
     <div class="form-area">  
-        <form role="form">
+       
         <br style="clear:both">
 
     <?= $this->Form->create($producto) ?>
@@ -21,14 +21,13 @@
             echo $this->form->button('calcular',['id'=>'calcular']);
             echo $this->Form->input('valor_sugerido',['readonly']);
             echo $this->Form->input('precio');
-            
             echo $this->Form->input('empresa_id');
             echo $this->Form->input('marca_id');
         ?>
     </fieldset>
     <?= $this->Form->button(__('Submit')) ?>
     <?= $this->Form->end() ?>
-</form>
+
     </div>
 </div>
 </div>

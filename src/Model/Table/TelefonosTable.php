@@ -1,18 +1,18 @@
 <?php
 namespace App\Model\Table;
 
-use App\Model\Entity\Carro;
+use App\Model\Entity\Telefono;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * Carros Model
+ * Telefonos Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Clientes
  */
-class CarrosTable extends Table
+class TelefonosTable extends Table
 {
 
     /**
@@ -25,8 +25,8 @@ class CarrosTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('carros');
-        $this->displayField('descripcion');
+        $this->table('telefonos');
+        $this->displayField('id');
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
@@ -50,23 +50,12 @@ class CarrosTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->requirePresence('descripcion', 'create')
-            ->notEmpty('descripcion');
+            ->requirePresence('numero', 'create')
+            ->notEmpty('numero');
 
         $validator
-            ->requirePresence('marca', 'create')
-            ->notEmpty('marca');
-        $validator
-            ->requirePresence('year', 'create')
-            ->notEmpty('year');
+            ->allowEmpty('otronumero');
 
-        $validator
-            ->requirePresence('modelo', 'create')
-            ->notEmpty('modelo');
-        $validator
-            ->requirePresence('tipo', 'create')
-            ->notEmpty('tipo');
-            
         return $validator;
     }
 

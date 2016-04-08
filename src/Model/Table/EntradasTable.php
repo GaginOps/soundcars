@@ -1,18 +1,18 @@
 <?php
 namespace App\Model\Table;
 
-use App\Model\Entity\Carro;
+use App\Model\Entity\Entrada;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * Carros Model
+ * Entradas Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Clientes
+ * @property \Cake\ORM\Association\BelongsTo $Productos
  */
-class CarrosTable extends Table
+class EntradasTable extends Table
 {
 
     /**
@@ -25,14 +25,14 @@ class CarrosTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('carros');
-        $this->displayField('descripcion');
+        $this->table('entradas');
+        $this->displayField('id');
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Clientes', [
-            'foreignKey' => 'cliente_id',
+        $this->belongsTo('Productos', [
+            'foreignKey' => 'producto_id',
             'joinType' => 'INNER'
         ]);
     }
@@ -50,23 +50,20 @@ class CarrosTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->requirePresence('descripcion', 'create')
-            ->notEmpty('descripcion');
+            ->integer('vieja_cant')
+            ->requirePresence('vieja_cant', 'create')
+            ->notEmpty('vieja_cant');
 
         $validator
-            ->requirePresence('marca', 'create')
-            ->notEmpty('marca');
-        $validator
-            ->requirePresence('year', 'create')
-            ->notEmpty('year');
+            ->integer('nueva_cant')
+            ->requirePresence('nueva_cant', 'create')
+            ->notEmpty('nueva_cant');
 
         $validator
-            ->requirePresence('modelo', 'create')
-            ->notEmpty('modelo');
-        $validator
-            ->requirePresence('tipo', 'create')
-            ->notEmpty('tipo');
-            
+            ->integer('en_inventario')
+            ->requirePresence('en_inventario', 'create')
+            ->notEmpty('en_inventario');
+
         return $validator;
     }
 
@@ -79,7 +76,7 @@ class CarrosTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['cliente_id'], 'Clientes'));
+        $rules->add($rules->existsIn(['producto_id'], 'Productos'));
         return $rules;
     }
 }

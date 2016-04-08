@@ -31,7 +31,8 @@ class VentasController extends AppController
         $ventas = $this->paginate($this->Ventas);
         $total=$this->Ventas->find();
         $total->select([
-        'total' => $total->func()->sum('subtotal')])
+        'total' => $total->func()->sum('subtotal'),
+        'resta' => $total->func()->sum('rest')])
         ->toArray();
         $this->set(compact('ventas','total'));
         $this->set('_serialize', ['ventas','total']);
@@ -108,7 +109,7 @@ class VentasController extends AppController
             
         }
         $producto = $this->Ventas->Productos->find('list', ['limit' => 200,'keyField' => 'id',
-        'valueField' =>'codigo'])->toArray();
+        'valueField' =>'full'])->toArray();
         $producto2= $this->Ventas->Productos->find('list', ['limit' => 200,'keyField' => 'id',
         'valueField' =>'modelo'])->toArray();
         $productot=array_merge($producto,$producto2);

@@ -1,3 +1,48 @@
+<script>
+  $(document).ready(function () {
+        
+         $('#agregarauto').on('click',function(){
+            var ca=$('#carro').val();
+            var ma=$('#marca').val();
+            var ye=$('#year').val();
+            var mo=$('#modelo').val();
+            var ti=$('#tipo').val();
+            var v=2;
+            $.ajax({
+                data: {"carro":ca,"validador":v,"marca":ma,"year":ye,"modelo":mo,"tipo":ti},
+                url:   '',
+                type:  'post',
+                dataType:'json', beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                        
+                },
+                success:  function (response){
+                    console.log(response);
+                   
+                                 }
+                 });
+         });
+
+         $('#agregartlf').on('click',function(){
+            var nu=$('#numero').val();
+            var v=1;
+            $.ajax({
+                data: {"numero":nu,"validador":v},
+                url:   '',
+                type:  'post',
+                dataType:'json', beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                        
+                },
+                success:  function (response){
+                    console.log(response);
+                   
+                                 }
+                 });
+         });
+         });
+     
+</script>
 
 <!-- tiene relacion con nueva venta, lista de venta -->
     <h3><?= h($cliente->nombre)  ?></h3>
@@ -59,5 +104,22 @@
             <?php endforeach; ?>
         </table>
         <?php endif; ?>
+        <table>
+            <tr>
+                <td><?= $this->Form->input('numero',['id'=>'numero','label'=>'nuevo numero telefonico']) ?></td>
+                <td><?= $this->Form->button('agregar telefono',['id'=>'agregartlf','type'=>'button']) ?></td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td><?= $this->Form->input('carro',['id'=>'carro','label'=>'nuevo auto']) ?></td>
+                <td><?= $this->Form->input('marca',['label'=>'marca','placeholder'=>'ingrese el auto del cliente']);?></td>
+                <td><?= $this->Form->input('year',['label'=>'Año','placeholder'=>'ingrese el auto del cliente']);?></td>
+                <td><?= $this->Form->input('modelo',['label'=>'modelo','placeholder'=>'ingrese el auto del cliente']);?></td>
+                <td><?= $this->Form->input('tipo',['label'=>'tipo de auto','options'=>['auto'=>'carro','camioneta'=>'camioneta']]);?><td>
+                <td><?= $this->Form->button('agregar auto',['id'=>'agregarauto','type'=>'button']) ?></td>
+            </tr>
+        </table>
+        
     </div>
 

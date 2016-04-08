@@ -4,19 +4,18 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Cliente Entity.
+ * Entrada Entity.
  *
  * @property int $id
- * @property string $nombre
- * @property int $cedula
- * @property string $direccion
- * @property string $sexo
- * @property string $email
+ * @property int $producto_id
+ * @property \App\Model\Entity\Producto $producto
+ * @property int $vieja_cant
+ * @property int $nueva_cant
+ * @property int $en_inventario
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
- * @property \App\Model\Entity\Venta[] $ventas
  */
-class Cliente extends Entity
+class Entrada extends Entity
 {
 
     /**
@@ -32,6 +31,4 @@ class Cliente extends Entity
         '*' => true,
         'id' => false,
     ];
-
-    
 }

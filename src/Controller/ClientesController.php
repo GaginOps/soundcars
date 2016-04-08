@@ -38,12 +38,47 @@ class ClientesController extends AppController
     public function view($id = null)
     {
         $cliente = $this->Clientes->get($id, [
-            'contain' => ['Ventatotales']
+            'contain' => ['Ventatotales','Carros','Telefonos']
         ]);
 
         $this->set('cliente', $cliente);
         $this->set('_serialize', ['cliente']);
-        
+        if ($this->request->is('ajax')) {
+            $cliente_id=$id;
+            $carros = TableRegistry::get('Carros');
+            $telefonos = TableRegistry::get('Telefonos');
+            $validador=json_decode($this->request->data['validador']);
+            if($validador==1)
+            {
+                $numero=json_decode($this->request->data['numero']);
+                $tlf=['numero'=>$numero,'cliente_id'=>$cliente_id];
+                $telefono= $telefonos->newEntity($tlf, ['validate' => false]);
+                $telefonos->save($telefono);
+                if($telefonos->save($telefono))
+                {
+                    $this->Flash->success(__('Nuevo telefono agregado al cliente'));
+                    return $this->redirect(['action' => 'index']);
+                } else {
+                    $this->Flash->error(__('El nuevo numero de telefono no pudo ser agregado'));
+                }
+                }else{
+                    $descripcion=$this->request->data['carro'];
+                    $marca=$this->request->data['marca'];
+                    $year=$this->request->data['year'];
+                    $modelo=$this->request->data['modelo'];
+                    $tipo=$this->request->data['tipo'];
+                    $car=['descripcion'=>$descripcion,'marca'=>$marca,'year'=>$year,'modelo'=>$modelo,'tipo'=>$tipo,'cliente_id'=>$cliente_id];
+                    $carro= $carros->newEntity($car, ['validate' => false]);
+                    $carros->save($carro);
+                    if($carros->save($carro))
+                    {
+                        $this->Flash->success(__('Nuevo carro agregado al cliente'));
+                        return $this->redirect(['action' => 'index']);
+                    } else {
+                        $this->Flash->error(__('El nuevo carro no pudo ser agregado'));
+                    }
+                }
+            }
     }
 
     /**
@@ -58,15 +93,25 @@ class ClientesController extends AppController
             $nombre=$this->request->data['nombre'];
             $cedula=$this->request->data['cedula'];
             $ci=strval($cedula);
-            $st=" dueño de la CI: ";
+            $st=" dueño/a de la CI: ";
             $full=$nombre.$st.$ci;
             $this->request->data['full']=$full;
             $cliente = $this->Clientes->patchEntity($cliente, $this->request->data);
+            $numero=$this->request->data['numero'];
+            $otronumero=$this->request->data['otronumero'];
             $descripcion=$this->request->data['carro'];
+            $marca=$this->request->data['marca'];
+            $year=$this->request->data['year'];
+            $modelo=$this->request->data['modelo'];
+            $tipo=$this->request->data['tipo'];
             $carros = TableRegistry::get('Carros');
+            $telefonos = TableRegistry::get('Telefonos');
             if ($this->Clientes->save($cliente)) {
                $cliente_id=$cliente->id;
-               $car=['descripcion'=>$descripcion,'cliente_id'=>$cliente_id];
+               $tlf=['numero'=>$numero,'otronumero'=>$otronumero,'cliente_id'=>$cliente_id];
+               $telefono= $telefonos->newEntity($tlf, ['validate' => false]);
+               $telefonos->save($telefono);
+               $car=['descripcion'=>$descripcion,'marca'=>$marca,'year'=>$year,'modelo'=>$modelo,'tipo'=>$tipo,'cliente_id'=>$cliente_id];
                $carro= $carros->newEntity($car, ['validate' => false]);
                 $carros->save($carro);
                 $this->Flash->success(__('The cliente has been saved.'));
@@ -86,15 +131,25 @@ class ClientesController extends AppController
             $nombre=$this->request->data['nombre'];
             $cedula=$this->request->data['cedula'];
             $ci=strval($cedula);
-            $st=" dueño de la CI: ";
+            $st=" dueño/a de la CI: ";
             $full=$nombre.$st.$ci;
             $this->request->data['full']=$full;
             $cliente = $this->Clientes->patchEntity($cliente, $this->request->data);
+            $numero=$this->request->data['numero'];
+            $otronumero=$this->request->data['otronumero'];
             $descripcion=$this->request->data['carro'];
+            $marca=$this->request->data['marca'];
+            $year=$this->request->data['year'];
+            $modelo=$this->request->data['modelo'];
+            $tipo=$this->request->data['tipo'];
             $carros = TableRegistry::get('Carros');
+            $telefonos = TableRegistry::get('Telefonos');
             if ($this->Clientes->save($cliente)) {
                $cliente_id=$cliente->id;
-               $car=['descripcion'=>$descripcion,'cliente_id'=>$cliente_id];
+               $tlf=['numero'=>$numero,'otronumero'=>$otronumero,'cliente_id'=>$cliente_id];
+               $telefono= $telefonos->newEntity($tlf, ['validate' => false]);
+               $telefonos->save($telefono);
+               $car=['descripcion'=>$descripcion,'marca'=>$marca,'year'=>$year,'modelo'=>$modelo,'tipo'=>$tipo,'cliente_id'=>$cliente_id];
                $carro= $carros->newEntity($car, ['validate' => false]);
                 $carros->save($carro);
                 $this->Flash->success(__('The cliente has been saved.'));

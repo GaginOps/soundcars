@@ -37,6 +37,9 @@ class ClientesTable extends Table
          $this->hasMany('Carros', [
             'foreignKey' => 'cliente_id'
         ]);
+         $this->hasMany('Telefonos', [
+            'foreignKey' => 'cliente_id'
+        ]);
     }
 
     /**

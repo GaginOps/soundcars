@@ -2,7 +2,7 @@
 namespace App\Controller;
 use Cake\ORM\TableRegistry;
 use App\Controller\AppController;
-use Cake\Routing\Router;
+
 
 /**
  * Ventatotales Controller
@@ -23,11 +23,15 @@ class VentatotalesController extends AppController
      * @return \Cake\Network\Response|null
      */
     public function index()
-    {
+    {   
+        $hoy = getdate();
+        $month=$hoy['mon'];
+        $day=$hoy['mday'];
+        $year=$hoy['year'];
         $this->paginate = [
             'contain' => ['Clientes'=>['Carros'],'Items'=>['Productos']]
         ];
-        $ventatotales = $this->paginate($this->Ventatotales->find()->where(['espera'=>0]));
+        $ventatotales = $this->paginate($this->Ventatotales->find()->where(['espera'=>0,'MONTH(Ventatotales.created)'=>$month,'DAY(Ventatotales.created)'=>$day,'YEAR(Ventatotales.created)'=>$year]));
 
         $this->set(compact('ventatotales'));
         $this->set('_serialize', ['ventatotales']);
@@ -81,7 +85,7 @@ class VentatotalesController extends AppController
           if ($this->request->is('ajax')) {
                $ventasTable = TableRegistry::get('Ventas');
                $itemsTable = TableRegistry::get('Items');
-               $item=$itemsTable->find()->where(['id'=>$id])->toArray();
+               $item=$itemsTable->find()->where(['ventatotale_id'=>$id])->toArray();
                for ($i=0; $i <count($item) ; $i++) { 
                    $producto_id=$item[$i]->producto_id;
                    $precio_u=$item[$i]->precio_u;
@@ -94,11 +98,13 @@ class VentatotalesController extends AppController
                    $ventas->cantidad=$cantidad;
                    $ventas->subtotal=$subtotal;
                    $ventasTable->save($ventas);
+
                }
-               
-               $ventat = $this->Ventatotales->get($id);
+             
+              $ventat = $this->Ventatotales->get($id);
               $this->Ventatotales->delete($ventat);
-              
+              $viejo=$itemsTable->find()->where(['ventatotale_id'=>$id]);
+              $itemsTable->delete($viejo);
               
               
         }
