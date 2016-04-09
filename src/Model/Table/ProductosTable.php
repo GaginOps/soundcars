@@ -95,6 +95,9 @@ class ProductosTable extends Table
             ->requirePresence('precio', 'create')
             ->notEmpty('precio');
 
+        $validator
+                ->allowEmpty('minimo', 'create');
+
         return $validator;
     }
 

@@ -76,7 +76,13 @@
 
             echo $this->Form->input('cliente_id', ['options' => $clientes]);
             echo $this->Form->input('tipopago',['id'=>'tipopago','label'=>'Tipo de pago','options'=>['efectivo'=>'efectivo','punto'=>'punto']]);
-            echo $this->Form->input('banco',['label'=>'banco','disabled','id'=>'banco']);
+            echo $this->Form->input('banco_id',['options'=>$bancos,'disabled','id'=>'banco']);
+            echo $this->Form->input('descuentot',['label'=>'¿desea realizar un descuento?','options'=>[
+                          'no'=>'no','si'=>'si']]);
+            echo $this->Form->input('valort',['readonly']);
+            //echo $this->Form->input('restt',['readonly','type'=>'hidden']);
+            /*echo $this->Form->button('descuento',['id'=>'descuentoTotal','type'=>'button']);
+            $this->Form->end();*/
         ?>
         
         
@@ -192,7 +198,15 @@
             <th>Total Bs.</th>
         </tr>
         <tr>
-        <?php foreach ($total as $t): ?>
+        <?php 
+       /* if($real>0){
+            $descv=$real;
+          }else{
+             $descv=0;
+          }*/
+        foreach ($total as $t): 
+
+          ?>
         
           <td>
             <?= $this->Number->format($t->total) ?>
@@ -200,7 +214,7 @@
         </tr>
         <tr>
           <th>
-          Descuento de Bs:
+          Descuento por producto Bs:
           </th>
         </tr>
         <tr>
@@ -208,6 +222,16 @@
           <?= $this->Number->format($t->resta) ?>
           </td>
         </tr>
+        <!-- <tr>
+          <th>
+          Descuento por venta Bs:
+          </th>
+        </tr>
+        <tr>
+           <td>
+          <?=  $this->Number->format($descv) ?>
+          </td>
+        </tr> -->
         <tr>
           <th>
           Total real Bs:
@@ -219,7 +243,7 @@
           </td>
         </tr>
          <?php endforeach; ?>
-        <
+        
     </table>
     <?php echo $this->Form->input('total', ['type' => 'hidden','value'=>$t->total-$t->resta]); ?>
     <table>
@@ -235,13 +259,18 @@
 
 <script>
   $(document).ready(function () {
+        $('#valort').val(0)
         $('#venta').on('click',function(){
             var c=$('#cliente-id').val();
             var t=$('#tipopago').val();
             var v=$('#total').val();
             var b=$('#banco').val();
+            var d=$('#descuentot').val();
+            var valort=$('#valort').val();
+            
+
             $.ajax({
-                data: {"cliente_id" : c,"tipopago": t, "total":v,"banco":b},
+                data: {"cliente_id" : c,"tipopago": t, "total2":v,"banco":b,"descuentot":d,"valort":valort},
                 url:   'ventatotales/add',
                 type:  'post',
                 dataType:'json', beforeSend: function (xhr) {
@@ -261,7 +290,7 @@
             var b=$('#banco').val();
             var e=1;
             $.ajax({
-                data: {"cliente_id" : c,"tipopago": t, "total":v,"banco":b,"espera":e},
+                data: {"cliente_id" : c,"tipopago": t, "total":v,"banco_id":b,"espera":e},
                 url:   'ventatotales/enespera',
                 type:  'post',
                 dataType:'json', beforeSend: function (xhr) {
@@ -276,9 +305,9 @@
          });
         $('#enviar').on('click',function(){
             var producto=$('#b').val();
-
+            var v=1;
             var consulta=$.ajax({
-                data: {"producto" : producto},
+                data: {"validador":v,"producto" : producto},
                 url:   '',
                 type:  'post',
                 dataType:'json',
@@ -300,7 +329,30 @@
           }); 
         });
 
+       /* $('#descuentoTotal').on('click',function(){
+            var vt=$('#valort').val();
+            var v=2;
+           var palabra=$.ajax({
+                data: {"validador":v,"paradescontar" : vt},
+                url:   '',
+                type:  'post',
+                dataType:'json', 
+                beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                        console.log("enviado");
 
+                },
+                success:  function (response){
+                    console.log(response);        
+                                 }
+         }); 
+       palabra.done(function (data) {
+             console.log(data);
+             $("#rest").val(data.real);
+             
+
+          }); 
+        });*/
 
         
          $('#cantidad').blur(mult)
@@ -313,12 +365,19 @@
 
           $('#valor').blur(resta)
          function resta(){
+          var s= $("#total").val();
+          var v= $("#valort").val();
+          var t=s-v;
+          $("#restt").val(t);
+         }
+
+          $('#valor').blur(resta)
+         function resta(){
           var s= $("#subtotal").val();
           var v= $("#valor").val();
           var t=s-v;
           $("#rest").val(t);
          }
-
 
         
       
@@ -371,6 +430,13 @@
             $('#valor').prop("readonly", false);
         }else{
             $('#valor').prop("readonly", true);
+        }
+        });
+        $("#descuentot").change(function(){
+        if($('#descuentot').val()=='si'){
+            $('#valort').prop("readonly", false);
+        }else{
+            $('#valort').prop("readonly", true);
         }
         }); 
       });

@@ -4,7 +4,7 @@
         <thead>
             <tr>
                 <th><?= $this->Paginator->sort('cliente') ?></th>
-                <th><?= $this->Paginator->sort('carro') ?></th>
+                <th><?= $this->Paginator->sort('total') ?></th>
                 <th><?= $this->Paginator->sort('created') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
                 <th><?= __('Cotizaciones') ?></th>
@@ -14,6 +14,7 @@
             <?php foreach ($ventatotales as $ventatotale): ?>
             <tr>
                 <td><?= $ventatotale->has('cliente') ? $this->Html->link($ventatotale->cliente->full, ['controller' => 'Clientes', 'action' => 'view', $ventatotale->cliente->id]) : '' ?></td> 
+                <td><?= h($ventatotale->total) ?></td>
                 <td><?= h($ventatotale->created) ?></td>
                 <td>
                     <li class="dropdown">
@@ -50,6 +51,105 @@
             <?php endforeach; ?>
 
         </tbody>
+    </table>
+    <table>
+        <tr>
+            <th>Gastos Bs.</th>
+        </tr>
+        <tr>
+        <?php 
+        foreach ($perdida as $p): 
+
+          ?>
+        <tr>
+           <td>
+          <?= $p->consumible_id ?>
+          </td>
+          <td>
+          <?= $this->Number->format($p->gasto) ?>
+          </td>
+        </tr>
+         <?php endforeach; ?>
+        
+    </table>
+     <table>
+        <tr>
+            <th>Total de Gastos Bs.</th>
+        </tr>
+        <tr>
+        <?php 
+        foreach ($gastototal as $g): 
+
+          ?>
+        <tr>
+           <td>
+          <?= $this->Number->format($g->gastototal) ?>
+          </td>
+        </tr>
+         <?php endforeach; ?>
+        
+    </table>
+     <table>
+        <tr>
+            <th>Total de Efectivo Bs.</th>
+        </tr>
+        <tr>
+        <?php 
+        foreach ($efectivo as $t): 
+
+          ?>
+        <tr>
+           <td>
+          <?= $this->Number->format($t->efectivo) ?>
+          </td>
+        </tr>
+         <?php endforeach; ?>
+        
+    </table>
+    <table>
+        <tr>
+            <th>Total por Punto Bs.</th>
+        </tr>
+        <tr>
+        <?php 
+        foreach ($punto as $t): 
+
+          ?>
+        <tr>
+           <td>
+          <?= $this->Number->format($t->punto) ?>
+          </td>
+        </tr>
+         <?php endforeach; ?>
+        
+    </table>
+    <table>
+        <tr>
+            <th>Total Bs.</th>
+        </tr>
+        <tr>
+        <?php 
+        foreach ($totalT as $t): 
+
+          ?>
+        <tr>
+           <td>
+          <?= $this->Number->format($t->totalT) ?>
+          </td>
+        </tr>
+         <?php endforeach; ?>
+         <table>
+        <tr>
+            <th>Total Real Bs.</th>
+        </tr>
+        <tr>
+        <tr>
+           <td>
+          <?= $this->Number->format($t->totalT-$g->gastototal) ?>
+          </td>
+        </tr>
+        
+        
     </table>
     <div class="paginator">
         <ul class="pagination">

@@ -21,6 +21,7 @@
             echo $this->form->button('calcular',['id'=>'calcular']);
             echo $this->Form->input('valor_sugerido',['readonly']);
             echo $this->Form->input('precio');
+            echo $this->Form->input('minimo');
             echo $this->Form->input('empresa_id');
             echo $this->Form->input('marca_id');
         ?>

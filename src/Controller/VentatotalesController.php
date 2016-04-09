@@ -35,6 +35,33 @@ class VentatotalesController extends AppController
 
         $this->set(compact('ventatotales'));
         $this->set('_serialize', ['ventatotales']);
+
+        $perdidas = TableRegistry::get('Perdidas'); 
+        $perdida=$perdidas->find();
+        $perdida->select(['consumible_id','gasto'])->where(['MONTH(Perdidas.created)'=>$month,'DAY(Perdidas.created)'=>$day,'YEAR(Perdidas.created)'=>$year]);
+        $gastototal=$perdidas->find();
+        $gastototal->select([
+        'gastototal' => $gastototal->func()->sum('gasto')])
+        ->where(['MONTH(Perdidas.created)'=>$month,'DAY(Perdidas.created)'=>$day,'YEAR(Perdidas.created)'=>$year])
+        ->toArray();
+
+        $efectivo=$this->Ventatotales->find();
+        $efectivo->select([
+        'efectivo' => $efectivo->func()->sum('total')])
+        ->where(['espera'=>0,'MONTH(Ventatotales.created)'=>$month,'DAY(Ventatotales.created)'=>$day,'YEAR(Ventatotales.created)'=>$year,'tipopago'=>'efectivo'])
+        ->toArray();
+        $punto=$this->Ventatotales->find();
+        $punto->select([
+        'punto' => $punto->func()->sum('total')])
+        ->where(['espera'=>0,'MONTH(Ventatotales.created)'=>$month,'DAY(Ventatotales.created)'=>$day,'YEAR(Ventatotales.created)'=>$year,'tipopago'=>'punto'])
+        ->toArray();
+        $totalT=$this->Ventatotales->find();
+        $totalT->select([
+        'totalT' => $totalT->func()->sum('total')])
+        ->where(['espera'=>0,'MONTH(Ventatotales.created)'=>$month,'DAY(Ventatotales.created)'=>$day,'YEAR(Ventatotales.created)'=>$year])
+        ->toArray();
+        $this->set(compact('totalT','efectivo','punto','perdida','gastototal'));
+        $this->set('_serialize', ['totalT','efectivo','punto','perdida','gastototal']);
     }
 
      public function indexenespera()
@@ -140,7 +167,22 @@ class VentatotalesController extends AppController
        }
 
         if ($this->request->is('ajax')) {
+          
+            $valort=$this->request->data['valort'];
+            $total2=$this->request->data['total2'];
+            if($valort>0){
+              $restt=$total2-$valort;
+              $this->request->data['restt']=$restt;
+              $this->request->data['total']=$total2-$restt;
+            }else{
+              $restt=0;
+              $this->request->data['restt']=$restt;
+              $this->request->data['total']=$total2;
+            }
+            
             $ventatotale = $this->Ventatotales->patchEntity($ventatotale, $this->request->data);
+          
+            
             if ($this->Ventatotales->save($ventatotale)) {
                 $ventatotale_id=$ventatotale->id;
                 $vi=$ventaitem->toArray();
@@ -151,12 +193,20 @@ class VentatotalesController extends AppController
                    $precio_u=$vi[$i]->precio_u;
                    $cantidad=$vi[$i]->cantidad;
                    $subtotal=$vi[$i]->subtotal;
+                   $descuento=$vi[$i]->descuento;
                    $item = $itemsTable->newEntity();
                    $item->ventatotale_id=$ventatotale_id;
                    $item->producto_id=$producto_id;
                    $item->precio_u=$precio_u;
                    $item->cantidad=$cantidad;
                    $item->subtotal=$subtotal;
+                   $item->descuento=$descuento;
+                   if($descuento=='si'){
+                    $valor=$vi[$i]->valor;
+                    $rest=$vi[$i]->rest;
+                    $item->valor=$valor;
+                    $item->rest=$rest;
+                   }
                    $itemsTable->save($item);
 
                 $exist= $productos->find()

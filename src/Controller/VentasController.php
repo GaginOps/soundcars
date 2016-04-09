@@ -54,21 +54,24 @@ class VentasController extends AppController
         $ventatotaleTable = TableRegistry::get('Ventatotales');
         $ventatotale = $ventatotaleTable->newEntity();
         $clienteTable = TableRegistry::get('Ventatotales');
+        $bancoTable = TableRegistry::get('Ventatotales');
+        $bancos=$ventatotaleTable->Bancos->find('list', ['limit' => 200]);
         $cliente = $clienteTable->newEntity();
+        $banco = $bancoTable->newEntity();
         $clientes = $ventatotaleTable->Clientes->find('list', ['limit' => 200]);
-        $this->set(compact('ventatotale', 'clientes','cliente'));
+        $this->set(compact('ventatotale', 'clientes','cliente','bancos','banco'));
         $this->set('_serialize', ['ventatotale']);
-
+        $real=0;
+        $this->set('real', $real);
         //add action
         $venta = $this->Ventas->newEntity();
         if ($this->request->is('ajax')) {
+            $validador=json_decode($this->request->data['validador']);
+            if($validador==1){
                $pro=json_decode($this->request->data['producto']);
-               //$produs=json_decode($this->request->data['producto']);
-               //$p=intval($produs);
                $precio= $productos->find()
                     ->select(['precio','id'])
                     ->where(['id' => $pro])
-                    //->orWhere(['modelo'=>$pro])
                     ->toArray();
                 $preciou=$precio[0]->precio;
                 $miproducto=$precio[0]->id;    
@@ -77,25 +80,48 @@ class VentasController extends AppController
                 $this->set('preciou', $preciou);
                 $this->set('miproducto', $miproducto);
                 $this->set('_serialize', ['preciou','miproducto']);
-
+            }
+            else
+                {
+                   $vt=json_decode($this->request->data['paradescontar']);
+                   $real=$total[0]->total-$total[0]->rest-$vt;
+                   echo json_encode(compact('real'));
+                    die;
+                    $this->set('real', $real);
+                    $this->set('_serialize', ['real']);
+                }
             }
         if ($this->request->is('post')) {
             $pro=$this->request->data['producto_id'];
             $cant=$this->request->data['cantidad'];
             $existencia=$productos->find()
-                    ->select(['existencia'])
+                    ->select(['existencia','minimo'])
                     ->where(['id' => $pro])
                     ->toArray();
+            $minimo=$productos->find()
+                    ->select(['minimo'])
+                    ->where(['id' => $pro])
+                    ->toArray();        
             $restante=$existencia[0]->existencia-$cant;
-            if($restante>0){
+            
+            if($minimo[0]->minimo>=$restante){
                     $venta = $this->Ventas->patchEntity($venta, $this->request->data);
                 if ($this->Ventas->save($venta)) {
-                    $this->Flash->success(__('The venta has been saved.'));
+                    $this->Flash->success(__('la ultima venta llevo o sobrepaso el minimo del producto en inventario'));
                     return $this->redirect(['action' => 'index']);
                 } else {
                     $this->Flash->error(__('The venta could not be saved. Please, try again.'));
                 }
-            } elseif ($restante==0) {
+            } elseif ($restante>0) {
+                $venta = $this->Ventas->patchEntity($venta, $this->request->data);
+                if ($this->Ventas->save($venta)) {
+                    $this->Flash->success(__('The venta has been saved.'));
+                    return $this->redirect(['action' => 'index']);
+                }  else {
+                    $this->Flash->error(__('The venta could not be saved. Please, try again.'));
+                }
+            }
+            elseif ($restante==0) {
                $venta = $this->Ventas->patchEntity($venta, $this->request->data);
                 if ($this->Ventas->save($venta)) {
                     $this->Flash->success(__('la ultima venta agoto el producto'));
