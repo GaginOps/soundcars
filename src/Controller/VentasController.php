@@ -55,11 +55,14 @@ class VentasController extends AppController
         $ventatotale = $ventatotaleTable->newEntity();
         $clienteTable = TableRegistry::get('Ventatotales');
         $bancoTable = TableRegistry::get('Ventatotales');
+        $carroTable = TableRegistry::get('Ventatotales');
         $bancos=$ventatotaleTable->Bancos->find('list', ['limit' => 200]);
         $cliente = $clienteTable->newEntity();
         $banco = $bancoTable->newEntity();
+        $carro = $bancoTable->newEntity();
         $clientes = $ventatotaleTable->Clientes->find('list', ['limit' => 200]);
-        $this->set(compact('ventatotale', 'clientes','cliente','bancos','banco'));
+        $carros = $ventatotaleTable->Carros->find('list', ['limit' => 200]);
+        $this->set(compact('ventatotale', 'clientes','cliente','bancos','banco','carros','carro'));
         $this->set('_serialize', ['ventatotale']);
         $real=0;
         $this->set('real', $real);

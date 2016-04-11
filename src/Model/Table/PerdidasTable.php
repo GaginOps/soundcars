@@ -54,6 +54,10 @@ class PerdidasTable extends Table
             ->requirePresence('gasto', 'create')
             ->notEmpty('gasto');
 
+        $validator
+            ->requirePresence('nombre', 'create')
+            ->notEmpty('nombre');
+
         return $validator;
     }
 

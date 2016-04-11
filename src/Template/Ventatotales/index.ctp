@@ -53,6 +53,19 @@
         </tbody>
     </table>
     <table>
+      <tr>
+      <th>Caja del dia anterior</th>
+      </tr>
+      <tr>
+      <?php foreach ($caja as $ca): ?>
+        
+        <td>
+          <?= $this->Number->format($ca->numero) ?>
+        </td>
+      </tr>
+      <?php endforeach; ?>
+    </table>
+    <table>
         <tr>
             <th>Gastos Bs.</th>
         </tr>
@@ -61,10 +74,8 @@
         foreach ($perdida as $p): 
 
           ?>
-        <tr>
-           <td>
-          <?= $p->consumible_id ?>
-          </td>
+        <td><?= h($p->nombre) ?></td>
+        
           <td>
           <?= $this->Number->format($p->gasto) ?>
           </td>
@@ -95,12 +106,12 @@
         </tr>
         <tr>
         <?php 
-        foreach ($efectivo as $t): 
+        foreach ($efectivo as $e): 
 
           ?>
         <tr>
            <td>
-          <?= $this->Number->format($t->efectivo) ?>
+          <?= $this->Number->format($e->efectivo) ?>
           </td>
         </tr>
          <?php endforeach; ?>
@@ -145,12 +156,16 @@
         <tr>
         <tr>
            <td>
-          <?= $this->Number->format($t->totalT-$g->gastototal) ?>
+          <?= $this->Number->format($ca->numero+($t->totalT-$g->gastototal)) ?>
           </td>
         </tr>
-        
-        
+       
     </table>
+     <?= 
+     
+     $this->Form->input('caja',['type'=>'hidden','value'=>$e->efectivo-$g->gastototal]); 
+     ?>
+     <?= $this->Form->button('Cerrar caja',['id'=>'cerrar','type'=>'button']); ?> 
     <div class="paginator">
         <ul class="pagination">
             <?= $this->Paginator->prev('< ' . __('previous')) ?>
@@ -160,3 +175,24 @@
         <p><?= $this->Paginator->counter() ?></p>
     </div>
 </div>
+<script>
+  $(document).ready(function(){
+    $('#cerrar').on('click',function(){
+      var numero=$('#caja').val();
+      $.ajax({
+                data: {"numero" : numero},
+                url:   'cajas/add',
+                type:  'post',
+                dataType:'json',
+                beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                        console.log("enviado");
+
+                },
+                success:  function (response){
+                    console.log(response);        
+                                 }
+         });  
+    });
+  });
+</script>

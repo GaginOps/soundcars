@@ -77,9 +77,7 @@
             echo $this->Form->input('cliente_id', ['options' => $clientes]);
             echo $this->Form->input('tipopago',['id'=>'tipopago','label'=>'Tipo de pago','options'=>['efectivo'=>'efectivo','punto'=>'punto']]);
             echo $this->Form->input('banco_id',['options'=>$bancos,'disabled','id'=>'banco']);
-            echo $this->Form->input('descuentot',['label'=>'¿desea realizar un descuento?','options'=>[
-                          'no'=>'no','si'=>'si']]);
-            echo $this->Form->input('valort',['readonly']);
+            echo $this->Form->input('carro_id', ['options' => $carros]);
             //echo $this->Form->input('restt',['readonly','type'=>'hidden']);
             /*echo $this->Form->button('descuento',['id'=>'descuentoTotal','type'=>'button']);
             $this->Form->end();*/
@@ -245,7 +243,19 @@
          <?php endforeach; ?>
         
     </table>
-    <?php echo $this->Form->input('total', ['type' => 'hidden','value'=>$t->total-$t->resta]); ?>
+    <table>
+      <tr>
+        <td>
+          <?php 
+          echo $this->Form->input('descuentot',['label'=>'¿desea realizar un descuento?','options'=>['no'=>'no','si'=>'si']]);
+            ?>
+        </td>
+        <td>
+          <?php echo $this->Form->input('valort',['readonly']); ?>
+        </td>
+      </tr>
+    </table>
+    <?php echo $this->Form->input('total', ['type' => 'hidden','value'=>$t->total-$t->resta]);?>
     <table>
       <tr>
         <td><?= $this->Form->button('Vender',['id'=>'venta','type'=>'button']) ?></td>
@@ -265,12 +275,13 @@
             var t=$('#tipopago').val();
             var v=$('#total').val();
             var b=$('#banco').val();
+            var a=$('#carro-id').val();
             var d=$('#descuentot').val();
             var valort=$('#valort').val();
             
 
             $.ajax({
-                data: {"cliente_id" : c,"tipopago": t, "total2":v,"banco":b,"descuentot":d,"valort":valort},
+                data: {"cliente_id" : c,"tipopago": t, "total2":v,"banco":b,"carro_id":a,"descuentot":d,"valort":valort},
                 url:   'ventatotales/add',
                 type:  'post',
                 dataType:'json', beforeSend: function (xhr) {
@@ -415,6 +426,7 @@
          
 
          $('#b').select2();
+         $('#carro-id').select2();
 
          $('#cliente-id').select2();
         $("#tipopago").change(function(){

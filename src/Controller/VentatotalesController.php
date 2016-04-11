@@ -38,7 +38,7 @@ class VentatotalesController extends AppController
 
         $perdidas = TableRegistry::get('Perdidas'); 
         $perdida=$perdidas->find();
-        $perdida->select(['consumible_id','gasto'])->where(['MONTH(Perdidas.created)'=>$month,'DAY(Perdidas.created)'=>$day,'YEAR(Perdidas.created)'=>$year]);
+        $perdida->select(['nombre','gasto'])->where(['MONTH(Perdidas.created)'=>$month,'DAY(Perdidas.created)'=>$day,'YEAR(Perdidas.created)'=>$year]);
         $gastototal=$perdidas->find();
         $gastototal->select([
         'gastototal' => $gastototal->func()->sum('gasto')])
@@ -60,8 +60,14 @@ class VentatotalesController extends AppController
         'totalT' => $totalT->func()->sum('total')])
         ->where(['espera'=>0,'MONTH(Ventatotales.created)'=>$month,'DAY(Ventatotales.created)'=>$day,'YEAR(Ventatotales.created)'=>$year])
         ->toArray();
-        $this->set(compact('totalT','efectivo','punto','perdida','gastototal'));
-        $this->set('_serialize', ['totalT','efectivo','punto','perdida','gastototal']);
+        $cajas=TableRegistry::get('Cajas');
+        $caja=$cajas->find();
+        $anterior=$cajas->find();
+        $anterior->select(['max' => $caja->func()->max('id')])->toArray();
+        $max=$anterior->select(['max' => $caja->func()->max('id')]);
+        $caja->select(['numero'])->where(['id'=>$max])->toArray();
+        $this->set(compact('totalT','efectivo','punto','perdida','gastototal','caja'));
+        $this->set('_serialize', ['totalT','efectivo','punto','perdida','gastototal','caja']);
     }
 
      public function indexenespera()

@@ -39,6 +39,10 @@ class VentatotalesTable extends Table
             'foreignKey' => 'banco_id',
             'joinType' => 'INNER'
         ]);
+        $this->belongsTo('Carros', [
+            'foreignKey' => 'carro_id',
+            'joinType' => 'INNER'
+        ]);
          $this->hasmany('Items', [
             'foreignKey' => 'ventatotale_id',
             'joinType' => 'INNER'

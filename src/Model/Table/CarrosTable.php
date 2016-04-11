@@ -30,7 +30,9 @@ class CarrosTable extends Table
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
-
+        $this->hasMany('Ventatotales', [
+            'foreignKey' => 'carro_id'
+        ]);
         $this->belongsTo('Clientes', [
             'foreignKey' => 'cliente_id',
             'joinType' => 'INNER'

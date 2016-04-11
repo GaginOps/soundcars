@@ -1,6 +1,6 @@
 <?php
 namespace App\Controller;
-
+use Cake\ORM\TableRegistry;
 use App\Controller\AppController;
 
 /**
@@ -53,6 +53,13 @@ class PerdidasController extends AppController
     {
         $perdida = $this->Perdidas->newEntity();
         if ($this->request->is('post')) {
+            $consumible_id=$this->request->data['consumible_id'];
+            $consumibles = TableRegistry::get('Consumibles');
+            $consumible=$consumibles->find()
+                   ->select(['consu'])
+                   ->where(['id'=>$consumible_id])
+                   ->toArray(); 
+            $this->request->data['nombre']=$consumible[0]->consu;       
             $perdida = $this->Perdidas->patchEntity($perdida, $this->request->data);
             if ($this->Perdidas->save($perdida)) {
                 $this->Flash->success(__('The perdida has been saved.'));

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 10, 2016 at 12:00 AM
+-- Generation Time: Apr 11, 2016 at 08:04 AM
 -- Server version: 10.0.17-MariaDB
 -- PHP Version: 5.6.14
 
@@ -41,6 +41,28 @@ INSERT INTO `bancos` (`id`, `banc`, `created`, `modified`) VALUES
 (1, 'Banesco', '2016-04-09 21:16:11', '2016-04-09 21:16:11'),
 (2, 'Venezuela', '2016-04-09 21:16:23', '2016-04-09 21:16:23'),
 (3, 'Provincial', '2016-04-09 21:16:42', '2016-04-09 21:16:42');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cajas`
+--
+
+CREATE TABLE `cajas` (
+  `id` int(11) NOT NULL,
+  `numero` int(11) NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+--
+-- Dumping data for table `cajas`
+--
+
+INSERT INTO `cajas` (`id`, `numero`, `created`, `modified`) VALUES
+(1, -100, '2016-04-10 22:40:59', '2016-04-10 22:40:59'),
+(2, 100, '2016-04-10 22:41:56', '2016-04-10 22:41:56'),
+(3, 27000, '2016-04-10 22:50:16', '2016-04-10 22:50:16');
 
 -- --------------------------------------------------------
 
@@ -131,7 +153,8 @@ CREATE TABLE `consumibles` (
 --
 
 INSERT INTO `consumibles` (`id`, `consu`, `created`, `modified`) VALUES
-(1, 'agua', '2016-04-09 17:54:22', '2016-04-09 17:54:22');
+(2, 'agua', '2016-04-10 23:47:44', '2016-04-10 23:47:44'),
+(3, 'pan con mortadela', '2016-04-11 00:05:59', '2016-04-11 00:05:59');
 
 -- --------------------------------------------------------
 
@@ -247,7 +270,11 @@ INSERT INTO `items` (`id`, `ventatotale_id`, `producto_id`, `precio_u`, `cantida
 (40, 27, 9, 12800, 1, 12800, NULL, NULL, NULL, 0, '2016-04-09 03:32:13', '2016-04-09 03:32:13'),
 (41, 28, 9, 12800, 2, 25600, NULL, NULL, NULL, 0, '2016-04-09 05:30:22', '2016-04-09 05:30:22'),
 (42, 29, 1, 5000, 1, 5000, NULL, NULL, NULL, 0, '2016-04-09 05:31:09', '2016-04-09 05:31:09'),
-(43, 30, 9, 12800, 2, 25600, 'si', 25000, NULL, 0, '2016-04-09 21:33:56', '2016-04-09 21:33:56');
+(43, 30, 9, 12800, 2, 25600, 'si', 25000, NULL, 0, '2016-04-09 21:33:56', '2016-04-09 21:33:56'),
+(44, 31, 10, 4350, 6, 26100, 'no', NULL, NULL, 0, '2016-04-10 22:38:48', '2016-04-10 22:38:48'),
+(45, 31, 11, 250, 4, 1000, 'no', NULL, NULL, 0, '2016-04-10 22:38:49', '2016-04-10 22:38:49'),
+(46, 32, 10, 4350, 2, 8700, 'no', NULL, NULL, 0, '2016-04-11 00:05:18', '2016-04-11 00:05:18'),
+(47, 33, 2, 2000, 1, 2000, 'no', NULL, NULL, 0, '2016-04-11 06:02:23', '2016-04-11 06:02:23');
 
 -- --------------------------------------------------------
 
@@ -279,6 +306,7 @@ CREATE TABLE `perdidas` (
   `id` int(11) NOT NULL,
   `gasto` int(11) NOT NULL,
   `consumible_id` int(11) NOT NULL,
+  `nombre` varchar(50) COLLATE utf8mb4_spanish_ci NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
@@ -287,8 +315,11 @@ CREATE TABLE `perdidas` (
 -- Dumping data for table `perdidas`
 --
 
-INSERT INTO `perdidas` (`id`, `gasto`, `consumible_id`, `created`, `modified`) VALUES
-(1, 500, 1, '2016-04-09 17:58:16', '2016-04-09 17:58:16');
+INSERT INTO `perdidas` (`id`, `gasto`, `consumible_id`, `nombre`, `created`, `modified`) VALUES
+(1, 500, 1, '', '2016-04-09 17:58:16', '2016-04-09 17:58:16'),
+(2, 100, 1, '', '2016-04-10 22:37:51', '2016-04-10 22:37:51'),
+(3, 100, 2, 'agua', '2016-04-10 23:48:34', '2016-04-10 23:48:34'),
+(4, 700, 3, 'pan con mortadela', '2016-04-11 00:06:19', '2016-04-11 00:06:19');
 
 -- --------------------------------------------------------
 
@@ -357,7 +388,7 @@ CREATE TABLE `productos` (
 
 INSERT INTO `productos` (`id`, `numero_serie`, `codigo`, `modelo`, `caracteristicas`, `existencia`, `pre_compra`, `iva`, `por_venta`, `valor_sugerido`, `precio`, `created`, `photo`, `dir`, `minimo`, `modified`, `empresa_id`, `marca_id`, `full`) VALUES
 (1, '5879', 5454, '475546', 'lo mejor', 27, 0, '0', '0', '0', 5000, '2016-02-22 03:30:25', NULL, NULL, 0, '2016-02-25 04:32:24', 0, 0, 'codigo y modelo 1'),
-(2, '0001', 1, 'cara', 'asdasda´sd añsdñals   p´sadp´sad', 4, 0, '0', '0', '0', 2000, '2016-02-24 02:10:20', NULL, NULL, 0, '2016-03-19 19:44:06', 1, 1, 'codigo y modelo 2'),
+(2, '0001', 1, 'cara', 'asdasda´sd añsdñals   p´sadp´sad', 3, 0, '0', '0', '0', 2000, '2016-02-24 02:10:20', NULL, NULL, 0, '2016-03-19 19:44:06', 1, 1, 'codigo y modelo 2'),
 (3, '587988', 454554, '454554', 'lala', 7, 0, '0', '0', '0', 4000, '2016-03-02 04:23:37', NULL, NULL, 0, '2016-03-30 04:22:29', 1, 1, 'codigo y modelo 3'),
 (4, '008', 8, 'llave especial', 'asdas', 0, 0, '0', '0', '0', 8000, '2016-03-02 04:24:07', NULL, NULL, 0, '2016-03-02 04:24:07', 1, 1, '8 del producto llave especial'),
 (5, '0002', 40025, 'v-italy', 'los mejr de italio', 1, 3500, '12', '30', '5000', 5500, '2016-03-02 05:27:37', NULL, NULL, 0, '2016-03-02 05:27:37', 1, 1, 'codigo y modelo 4'),
@@ -365,8 +396,8 @@ INSERT INTO `productos` (`id`, `numero_serie`, `codigo`, `modelo`, `caracteristi
 (7, '00025698', 456984, 'robot asesino', 'mata mcuho', 0, 20000, '12', '30', '28400', 30000, '2016-04-01 23:40:54', NULL, NULL, 0, '2016-04-01 23:40:54', 1, 1, 'codigo y modelo 6'),
 (8, '456546', 5465644, 'keyhere', 'asdadssadsadsad', 0, 4000, '12', '30', '5680', 6000, '2016-04-02 03:42:56', NULL, NULL, 0, '2016-04-02 03:42:56', 1, 1, 'codigo y modelo 7'),
 (9, '8', 8300, 'sueños', 'cxasdasdlñsdalñsañl', 17, 9000, '12', '30', '12780', 12800, '2016-04-06 04:09:09', NULL, NULL, 0, '2016-04-06 04:09:09', 1, 1, 'sueños del producto 8300'),
-(10, 'trompeta', 5, '89653', 'es ruidosa', 10, 3000, '12', '30', '4260', 4350, '2016-04-09 21:45:04', NULL, NULL, 5, '2016-04-09 21:45:04', 1, 1, '89653 del producto 0005'),
-(11, 'vv-5250', 9025698, 'carpintero', 'carpintea mucho', 12, 200, '12', '30', '284', 250, '2016-04-09 21:57:00', NULL, NULL, 10, '2016-04-09 21:57:00', 1, 1, 'carpintero del producto 9025698');
+(10, 'trompeta', 5, '89653', 'es ruidosa', 2, 3000, '12', '30', '4260', 4350, '2016-04-09 21:45:04', NULL, NULL, 5, '2016-04-09 21:45:04', 1, 1, '89653 del producto 0005'),
+(11, 'vv-5250', 9025698, 'carpintero', 'carpintea mucho', 8, 200, '12', '30', '284', 250, '2016-04-09 21:57:00', NULL, NULL, 10, '2016-04-09 21:57:00', 1, 1, 'carpintero del producto 9025698');
 
 -- --------------------------------------------------------
 
@@ -437,15 +468,6 @@ CREATE TABLE `ventas` (
   `modified` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
---
--- Dumping data for table `ventas`
---
-
-INSERT INTO `ventas` (`id`, `producto_id`, `precio_u`, `cantidad`, `subtotal`, `descuento`, `valor`, `rest`, `created`, `modified`) VALUES
-(4, 10, 4350, 6, 26100, 'no', NULL, NULL, '2016-04-09 21:53:27', '2016-04-09 21:53:27'),
-(5, 10, 4350, 6, 26100, 'no', NULL, NULL, '2016-04-09 21:55:51', '2016-04-09 21:55:51'),
-(7, 11, 250, 6, 1500, 'no', NULL, NULL, '2016-04-09 21:59:28', '2016-04-09 21:59:28');
-
 -- --------------------------------------------------------
 
 --
@@ -458,6 +480,7 @@ CREATE TABLE `ventatotales` (
   `cliente_id` int(11) NOT NULL,
   `tipopago` varchar(25) COLLATE utf8mb4_spanish_ci NOT NULL,
   `banco_id` int(11) DEFAULT NULL,
+  `carro_id` int(11) DEFAULT NULL,
   `descuentot` varchar(2) COLLATE utf8mb4_spanish_ci DEFAULT NULL,
   `valort` int(11) DEFAULT NULL,
   `restt` int(11) DEFAULT NULL,
@@ -470,22 +493,25 @@ CREATE TABLE `ventatotales` (
 -- Dumping data for table `ventatotales`
 --
 
-INSERT INTO `ventatotales` (`id`, `total`, `cliente_id`, `tipopago`, `banco_id`, `descuentot`, `valort`, `restt`, `espera`, `created`, `modified`) VALUES
-(15, 8000, 1, 'efectivo', 0, NULL, NULL, NULL, 0, '2016-04-05 01:49:09', '2016-04-05 01:49:09'),
-(16, 12000, 1, 'efectivo', 0, NULL, NULL, NULL, 0, '2016-04-05 02:28:33', '2016-04-05 02:28:33'),
-(18, 30000, 1, 'efectivo', 0, NULL, NULL, NULL, 0, '2016-04-05 02:39:00', '2016-04-05 02:39:00'),
-(19, 8000, 1, 'efectivo', 0, NULL, NULL, NULL, 0, '2016-04-05 03:55:21', '2016-04-05 03:55:21'),
-(20, 8000, 8, 'efectivo', 0, NULL, NULL, NULL, 0, '2016-04-05 03:58:38', '2016-04-05 03:58:38'),
-(21, 4000, 1, 'efectivo', 0, NULL, NULL, NULL, 0, '2016-04-06 03:02:28', '2016-04-06 03:02:28'),
-(22, 26000, 1, 'efectivo', 0, NULL, NULL, NULL, 0, '2016-04-07 01:38:50', '2016-04-07 01:38:50'),
-(23, 51600, 1, 'efectivo', 0, NULL, NULL, NULL, 0, '2016-04-08 03:16:55', '2016-04-08 03:16:55'),
-(24, 17800, 1, 'efectivo', 0, NULL, NULL, NULL, 0, '2016-04-09 01:38:12', '2016-04-09 01:38:12'),
-(25, 1100, 1, 'efectivo', 0, 'si', 1100, 65000, 0, '2016-04-09 03:13:38', '2016-04-09 03:13:38'),
-(26, 0, 1, 'efectivo', 0, 'no', 0, 25600, 0, '2016-04-09 03:27:12', '2016-04-09 03:27:12'),
-(27, 12000, 1, 'efectivo', 0, 'si', 12000, 800, 0, '2016-04-09 03:32:13', '2016-04-09 03:32:13'),
-(28, 25600, 1, 'efectivo', 0, 'no', 0, 0, 0, '2016-04-09 05:30:22', '2016-04-09 05:30:22'),
-(29, 5000, 13, 'punto', 0, 'no', 0, 0, 0, '2016-04-09 05:31:08', '2016-04-09 05:31:08'),
-(30, 25000, 16, 'punto', NULL, 'no', 0, 0, 0, '2016-04-09 21:33:56', '2016-04-09 21:33:56');
+INSERT INTO `ventatotales` (`id`, `total`, `cliente_id`, `tipopago`, `banco_id`, `carro_id`, `descuentot`, `valort`, `restt`, `espera`, `created`, `modified`) VALUES
+(15, 8000, 1, 'efectivo', 0, 0, NULL, NULL, NULL, 0, '2016-04-05 01:49:09', '2016-04-05 01:49:09'),
+(16, 12000, 1, 'efectivo', 0, 0, NULL, NULL, NULL, 0, '2016-04-05 02:28:33', '2016-04-05 02:28:33'),
+(18, 30000, 1, 'efectivo', 0, 0, NULL, NULL, NULL, 0, '2016-04-05 02:39:00', '2016-04-05 02:39:00'),
+(19, 8000, 1, 'efectivo', 0, 0, NULL, NULL, NULL, 0, '2016-04-05 03:55:21', '2016-04-05 03:55:21'),
+(20, 8000, 8, 'efectivo', 0, 0, NULL, NULL, NULL, 0, '2016-04-05 03:58:38', '2016-04-05 03:58:38'),
+(21, 4000, 1, 'efectivo', 0, 0, NULL, NULL, NULL, 0, '2016-04-06 03:02:28', '2016-04-06 03:02:28'),
+(22, 26000, 1, 'efectivo', 0, 0, NULL, NULL, NULL, 0, '2016-04-07 01:38:50', '2016-04-07 01:38:50'),
+(23, 51600, 1, 'efectivo', 0, 0, NULL, NULL, NULL, 0, '2016-04-08 03:16:55', '2016-04-08 03:16:55'),
+(24, 17800, 1, 'efectivo', 0, 0, NULL, NULL, NULL, 0, '2016-04-09 01:38:12', '2016-04-09 01:38:12'),
+(25, 1100, 1, 'efectivo', 0, 0, 'si', 1100, 65000, 0, '2016-04-09 03:13:38', '2016-04-09 03:13:38'),
+(26, 0, 1, 'efectivo', 0, 0, 'no', 0, 25600, 0, '2016-04-09 03:27:12', '2016-04-09 03:27:12'),
+(27, 12000, 1, 'efectivo', 0, 0, 'si', 12000, 800, 0, '2016-04-09 03:32:13', '2016-04-09 03:32:13'),
+(28, 25600, 1, 'efectivo', 0, 0, 'no', 0, 0, 0, '2016-04-09 05:30:22', '2016-04-09 05:30:22'),
+(29, 5000, 13, 'punto', 0, 0, 'no', 0, 0, 0, '2016-04-09 05:31:08', '2016-04-09 05:31:08'),
+(30, 25000, 16, 'punto', NULL, 0, 'no', 0, 0, 0, '2016-04-09 21:33:56', '2016-04-09 21:33:56'),
+(31, 27100, 1, 'efectivo', NULL, NULL, 'no', 0, 0, 0, '2016-04-10 22:38:48', '2016-04-10 22:38:48'),
+(32, 8700, 1, 'efectivo', NULL, NULL, 'no', 0, 0, 0, '2016-04-11 00:05:17', '2016-04-11 00:05:17'),
+(33, 1800, 9, 'punto', NULL, 1, 'si', 1800, 200, 0, '2016-04-11 06:02:22', '2016-04-11 06:02:22');
 
 --
 -- Indexes for dumped tables
@@ -495,6 +521,12 @@ INSERT INTO `ventatotales` (`id`, `total`, `cliente_id`, `tipopago`, `banco_id`,
 -- Indexes for table `bancos`
 --
 ALTER TABLE `bancos`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `cajas`
+--
+ALTER TABLE `cajas`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -591,6 +623,11 @@ ALTER TABLE `ventatotales`
 ALTER TABLE `bancos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
+-- AUTO_INCREMENT for table `cajas`
+--
+ALTER TABLE `cajas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
 -- AUTO_INCREMENT for table `carros`
 --
 ALTER TABLE `carros`
@@ -604,7 +641,7 @@ ALTER TABLE `clientes`
 -- AUTO_INCREMENT for table `consumibles`
 --
 ALTER TABLE `consumibles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `empresas`
 --
@@ -619,7 +656,7 @@ ALTER TABLE `entradas`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 --
 -- AUTO_INCREMENT for table `marcas`
 --
@@ -629,7 +666,7 @@ ALTER TABLE `marcas`
 -- AUTO_INCREMENT for table `perdidas`
 --
 ALTER TABLE `perdidas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `productos`
 --
@@ -649,12 +686,12 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `ventatotales`
 --
 ALTER TABLE `ventatotales`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
